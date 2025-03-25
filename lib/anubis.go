@@ -98,10 +98,6 @@ func New(opts Options) (*Server, error) {
 		return nil, fmt.Errorf("failed to generate ed25519 key: %w", err)
 	}
 
-	if err != nil {
-		return nil, err // parseConfig sets a fancy error for us
-	}
-
 	result := &Server{
 		next:       opts.Next,
 		priv:       priv,
@@ -498,8 +494,8 @@ func (s *Server) check(r *http.Request) (CheckResult, *policy.Bot, error) {
 
 	return cr("default/allow", config.RuleAllow), &policy.Bot{
 		Challenge: &config.ChallengeRules{
-			Difficulty: anubis.DefaultDifficulty,
-			ReportAs:   anubis.DefaultDifficulty,
+			Difficulty: s.policy.DefaultDifficulty,
+			ReportAs:   s.policy.DefaultDifficulty,
 			Algorithm:  config.AlgorithmFast,
 		},
 	}, nil
